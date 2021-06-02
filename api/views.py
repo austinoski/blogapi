@@ -21,3 +21,16 @@ class ListCreateAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PostPublishAPIView(APIView):
+    serializer_class = PostSerializer
+
+    def get(self, request, pk, format=None):
+        post = Post.objects.filter(id=pk).first()
+        if post:
+            post.published = True
+            post.save()
+            serializer = self.serializer_class(instance=post)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
