@@ -6,6 +6,7 @@ class Post(models.Model):
     body = models.TextField()
     published = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
     published_at = models.DateTimeField(null=True, blank=True)
 
     def __repr__(self):

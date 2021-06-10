@@ -45,3 +45,22 @@ class EndpointTestCase(TestCase):
     def test_post_publish_endpoint_on_bad_request(self):
         response = self.client.get(reverse('post-publish', args=[1000]))
         self.assertEqual(response.status_code, 400)
+    
+    def test_post_retrieve_endpoint(self):
+        response = self.client.get(reverse('post-retrieve-update', args=[2]))
+        response_data = response.json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_data['title'], 'New Post Title 2')
+        self.assertEqual(response_data['body'], 'Sweet post body 2')
+        self.assertEqual(response_data['id'], 2)
+    
+    def test_post_retrieve_endpoint_on_post_not_found(self):
+        response = self.client.get(reverse('post-retrieve-update', args=[1000]))
+        self.assertEqual(response.status_code, 404)
+    
+    def test_post_update_endpoint(self):
+        data = {'title': 'Updated Post Title 3'}
+        response = self.client.patch(reverse('post-retrieve-update', args=[3]), data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['title'], data['title'])
+        self.assertTrue(response.data['updated_at'] != None)
